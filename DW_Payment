@@ -1,0 +1,74 @@
+<Schema name="DW_Payment">
+  <Dimension type="StandardDimension" visible="true" highCardinality="false" name="Customer">
+    <Hierarchy name="dim_customer" visible="true" hasAll="true" allMemberName="Semua_Customer" primaryKey="sk_customer">
+      <Table name="dim_customer" schema="dwh">
+      </Table>
+      <Level name="Nama Customer" visible="true" column="customer_fullname" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never">
+      </Level>
+      <Level name="Kota" visible="true" column="city" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+      </Level>
+      <Level name="Negara" visible="true" column="country" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Dimension type="StandardDimension" visible="true" highCardinality="false" name="Kategori">
+    <Hierarchy name="dim_category" visible="true" hasAll="true" allMemberName="Semua_Kategori" primaryKey="sk_category">
+      <Table name="dim_category" schema="dwh">
+      </Table>
+      <Level name="Kategori" visible="true" column="name" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never">
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Dimension type="StandardDimension" visible="true" highCardinality="false" name="Film">
+    <Hierarchy name="dim_film" visible="true" hasAll="true" allMemberName="Semua_Film" primaryKey="sk_film">
+      <Table name="dim_film" schema="dwh">
+      </Table>
+      <Level name="Judul" visible="true" column="title" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never">
+      </Level>
+      <Level name="Kategori Film" visible="true" column="category_name" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+      </Level>
+      <Level name="Tahun Terbit" visible="true" column="release_year" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Dimension type="TimeDimension" visible="true" highCardinality="false" name="Date">
+    <Hierarchy name="dim_date" visible="true" hasAll="true" allMemberName="Semua_Waktu" primaryKey="sk_waktu">
+      <Table name="dim_date" schema="dwh">
+      </Table>
+      <Level name="Hari" visible="true" column="hari" type="String" uniqueMembers="false" levelType="TimeDays" hideMemberIf="Never">
+      </Level>
+      <Level name="Bulan" visible="true" column="bulan" type="String" uniqueMembers="false" levelType="TimeMonths" hideMemberIf="Never">
+      </Level>
+      <Level name="Tahun" visible="true" column="tahun_angka" type="Numeric" uniqueMembers="false" levelType="TimeYears" hideMemberIf="Never">
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Dimension type="StandardDimension" visible="true" highCardinality="false" name="Inventory">
+    <Hierarchy name="dim_inventory" visible="true" hasAll="true" allMemberName="Semua_Inventory" primaryKey="sk_inventory">
+      <Table name="dim_inventory" schema="dwh">
+      </Table>
+      <Level name="Store Id" visible="true" column="store_id" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+      </Level>
+      <Level name="Inventory Id" visible="true" column="inventory_id" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never">
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Cube name="Analisis_Payment" visible="true" cache="true" enabled="true">
+    <Table name="fact_payment" schema="dwh">
+    </Table>
+    <DimensionUsage source="Customer" name="Customer" visible="true" foreignKey="sk_customer" highCardinality="false">
+    </DimensionUsage>
+    <DimensionUsage source="Kategori" name="Kategori" visible="true" foreignKey="sk_category" highCardinality="false">
+    </DimensionUsage>
+    <DimensionUsage source="Film" name="Film" visible="true" foreignKey="sk_film" highCardinality="false">
+    </DimensionUsage>
+    <DimensionUsage source="Date" name="Waktu" visible="true" foreignKey="sk_payment_date" highCardinality="false">
+    </DimensionUsage>
+    <DimensionUsage source="Inventory" name="Inventory" visible="true" foreignKey="sk_inventory" highCardinality="false">
+    </DimensionUsage>
+    <Measure name="Total Uang" column="amount" aggregator="sum" visible="true">
+    </Measure>
+    <Measure name="Total Transaksi" column="trx_id" aggregator="count" visible="true">
+    </Measure>
+  </Cube>
+</Schema>
